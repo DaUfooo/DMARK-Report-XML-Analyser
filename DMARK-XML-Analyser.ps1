@@ -32,6 +32,7 @@ $processedFilesCount = 0
 $allOutput = @()
 
 foreach ($xmlFile in $xmlFiles) {
+    Write-Host "----------------------------------------------------------------------" -ForegroundColor Red
     Write-Host "`nVerarbeite Datei: $($xmlFile.Name)" -ForegroundColor Cyan
     $processedFilesCount++
 
