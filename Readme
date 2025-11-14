@@ -1,20 +1,18 @@
 Das von mir erstellte PowerShell-Skript, verarbeitet XML-Dateien, die Berichte über SPF (Sender Policy Framework) und DKIM (DomainKeys Identified Mail) Authentifizierung enthalten.
 Diese Berichte stammen in der Regel von E-Mail-Domain-Validierungsdiensten und helfen, die Authentizität von E-Mails zu überprüfen.
+Output wird als Ergebniss-Auswertung.csv erstellt.
 
 1. Überprüfung des Verzeichnisses
-Das Skript überprüft, ob das Verzeichnis .\XML-Reports\ existiert, in dem die XML-Dateien erwartet werden:
-Falls das Verzeichnis nicht vorhanden ist, gibt es eine Fehlermeldung aus und beendet das Skript.
-Falls keine XML-Dateien im Verzeichnis gefunden werden, gibt es ebenfalls eine Fehlermeldung aus.
+Das Skript überprüft, ob das Verzeichnis .\XML-Reports\ existiert!!
 
 2. Verarbeitung der XML-Dateien
-Daten extrahieren: Aus der XML-Datei werden wichtige Informationen extrahiert, darunter:
+Aus der XML-Datei werden wichtige Informationen extrahiert:
 org_name (Name der Organisation)
 email (E-Mail-Adresse der Organisation)
 report_id (Berichts-ID)
 domain (Die Domain, für die der Bericht gilt)
 pct (Prozentsatz, der angibt, wie viele E-Mails den Authentifizierungstest durchlaufen sollen)
 Der Zeitbereich des Berichts (Start- und Endzeit der E-Mail-Überprüfung)
-Diese Daten werden formatiert und auf der Konsole ausgegeben.
 
 3. Verarbeitung der Authentifizierungsergebnisse
 Das Skript erstellt für jedes Ergebnis eine Tabelle, die folgende Spalten enthält:
@@ -55,3 +53,6 @@ Percentage: 100
 2025-11-14 14:32:00 Netze des Bundes             133.33.133.133          pass pass, pass mx.xxxxxx.com, xxxx.com       pass pass       blabla.com                    1
 2025-11-14 14:32:00 statens-it.dk                0.44.123.123            pass pass       github.com                    pass pass       blabla.com                    1
 2025-11-14 14:32:00 yahoo.com                    192.168.0.1             pass pass       github.com                    pass none       blabla.com                    1
+
+Am Ende wird ein CSV erstellt.
+.\Ergebniss-Auswertung.csv
