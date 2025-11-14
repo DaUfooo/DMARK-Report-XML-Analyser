@@ -7,9 +7,6 @@ Falls das Verzeichnis nicht vorhanden ist, gibt es eine Fehlermeldung aus und be
 Falls keine XML-Dateien im Verzeichnis gefunden werden, gibt es ebenfalls eine Fehlermeldung aus.
 
 2. Verarbeitung der XML-Dateien
-Für jede XML-Datei im Verzeichnis führt das Skript folgende Schritte aus:
-Datei einlesen: Es liest die XML-Datei ein und verarbeitet sie.
-Fehlerbehandlung: Falls die Datei nicht korrekt geladen werden kann, gibt es eine Fehlermeldung.
 Daten extrahieren: Aus der XML-Datei werden wichtige Informationen extrahiert, darunter:
 org_name (Name der Organisation)
 email (E-Mail-Adresse der Organisation)
@@ -20,12 +17,6 @@ Der Zeitbereich des Berichts (Start- und Endzeit der E-Mail-Überprüfung)
 Diese Daten werden formatiert und auf der Konsole ausgegeben.
 
 3. Verarbeitung der Authentifizierungsergebnisse
-Innerhalb jeder XML-Datei gibt es record-Elemente, die die Ergebnisse der SPF- und DKIM-Überprüfungen enthalten:
-SPF (Sender Policy Framework) und DKIM (DomainKeys Identified Mail) sind Methoden zur Authentifizierung von E-Mails. 
-Das Skript überprüft, ob die jeweiligen Authentifizierungsergebnisse "pass", "fail" oder "neutral" sind und ordnet diesen Ergebnissen verschiedene Farben zu:
-Grün für "pass"
-Rot für "fail"
-Gelb für "neutral" oder andere Ergebnisse.
 Das Skript erstellt für jedes Ergebnis eine Tabelle, die folgende Spalten enthält:
 ReportTime (Aktuelle Zeit)
 Organisation (Name der Organisation)
