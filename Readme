@@ -1,12 +1,12 @@
 Das von mir erstellte PowerShell-Skript, verarbeitet XML-Dateien, die Berichte über SPF (Sender Policy Framework) und DKIM (DomainKeys Identified Mail) Authentifizierung enthalten.
 Diese Berichte stammen in der Regel von E-Mail-Domain-Validierungsdiensten und helfen, die Authentizität von E-Mails zu überprüfen.
 
-2. Überprüfung des Verzeichnisses
+1. Überprüfung des Verzeichnisses
 Das Skript überprüft, ob das Verzeichnis .\XML-Reports\ existiert, in dem die XML-Dateien erwartet werden:
 Falls das Verzeichnis nicht vorhanden ist, gibt es eine Fehlermeldung aus und beendet das Skript.
 Falls keine XML-Dateien im Verzeichnis gefunden werden, gibt es ebenfalls eine Fehlermeldung aus.
 
-3. Verarbeitung der XML-Dateien
+2. Verarbeitung der XML-Dateien
 Für jede XML-Datei im Verzeichnis führt das Skript folgende Schritte aus:
 Datei einlesen: Es liest die XML-Datei ein und verarbeitet sie.
 Fehlerbehandlung: Falls die Datei nicht korrekt geladen werden kann, gibt es eine Fehlermeldung.
@@ -19,7 +19,7 @@ pct (Prozentsatz, der angibt, wie viele E-Mails den Authentifizierungstest durch
 Der Zeitbereich des Berichts (Start- und Endzeit der E-Mail-Überprüfung)
 Diese Daten werden formatiert und auf der Konsole ausgegeben.
 
-4. Verarbeitung der Authentifizierungsergebnisse
+3. Verarbeitung der Authentifizierungsergebnisse
 Innerhalb jeder XML-Datei gibt es record-Elemente, die die Ergebnisse der SPF- und DKIM-Überprüfungen enthalten:
 SPF (Sender Policy Framework) und DKIM (DomainKeys Identified Mail) sind Methoden zur Authentifizierung von E-Mails. 
 Das Skript überprüft, ob die jeweiligen Authentifizierungsergebnisse "pass", "fail" oder "neutral" sind und ordnet diesen Ergebnissen verschiedene Farben zu:
@@ -34,6 +34,33 @@ SPF, SPFResult, SPFDomain (Details zu SPF)
 DKIM, DKIMResult, DKIMDomain (Details zu DKIM)
 Count (Anzahl der E-Mails)
 
-5. Ergebnisse anzeigen
+4. Ergebnisse anzeigen
 Nach der Verarbeitung aller Dateien wird eine Tabelle mit den zusammengefassten Ergebnissen für alle XML-Dateien angezeigt:
 Die Tabelle listet die extrahierten und verarbeiteten Daten auf, damit der Benutzer die Authentifizierungsergebnisse für die jeweiligen Domains und Absender-IP-Adressen überprüfen kann.
+
+Verarbeite Datei: yahoo.com!blabla.gv.at!1354454365!1453534535599.xml
+Date Range: 2025-11-11 01:00:00 to 2025-11-12 00:59:59
+Organisation: Yahoo
+Email: dmarchelp@yahooinc.com
+Percentage: 100
+
+2025-11-14 14:32:00 Outlook.com                  209.85.128.185          fail pass       googlegroups.com              fail pass       googlegroups.com              1
+2025-11-14 14:32:00 Outlook.com                  74.125.224.60           fail pass       googlegroups.com              fail pass       googlegroups.com              1
+2025-11-14 14:32:00 Outlook.com                  123.44.122.122          pass pass       github.com                    pass pass       blabla.com                    3
+2025-11-14 14:32:00 Outlook.com                  209.85.128.187          fail pass       googlegroups.com              fail pass       googlegroups.com              5
+2025-11-14 14:32:00 Outlook.com                  209.85.128.188          fail pass       googlegroups.com              fail pass       googlegroups.com              2
+2025-11-14 14:32:00 Outlook.com                  0.0.0.0                 pass pass       agithub.com                   pass pass       blabla.com                    3
+2025-11-14 14:32:00 Outlook.com                  74.125.224.59           fail pass       googlegroups.com              fail pass       googlegroups.com              1
+2025-11-14 14:32:00 Outlook.com                  133.36.133.111          pass pass       github.com                    pass pass       blabla.com                    2
+2025-11-14 14:32:00 Outlook.com                  209.85.128.183          fail pass       googlegroups.com              fail pass       googlegroups.com              5
+2025-11-14 14:32:00 Outlook.com                  74.125.224.55           fail pass       googlegroups.com              fail pass       googlegroups.com              2
+2025-11-14 14:32:00 Outlook.com                  74.125.224.63           fail pass       googlegroups.com              fail pass       googlegroups.com              1
+2025-11-14 14:32:00 Outlook.com                  209.85.222.53           fail pass       ggithub.com                   fail pass       googlegroups.com              1
+2025-11-14 14:32:00 Outlook.com                  209.85.128.192          fail pass       googlegroups.com              fail pass       googlegroups.com              2
+2025-11-14 14:32:00 Outlook.com                  209.85.128.187          fail pass       googlegroups.com              fail pass       googlegroups.com              1
+2025-11-14 14:32:00 testitst.com                 209.85.128.185          fail pass       googlegroups.com              fail pass       googlegroups.com              1
+2025-11-14 14:32:00 instagram.com                209.85.128.184          fail pass       googlegroups.com              fail pass       googlegroups.com              1
+2025-11-14 14:32:00 Outlook.com                  88.88.177.118           fail pass       gmgithub.com                  pass pass       blabla.com                    1
+2025-11-14 14:32:00 Netze des Bundes             133.33.133.133          pass pass, pass mx.xxxxxx.com, xxxx.com       pass pass       blabla.com                    1
+2025-11-14 14:32:00 statens-it.dk                0.44.123.123            pass pass       github.com                    pass pass       blabla.com                    1
+2025-11-14 14:32:00 yahoo.com                    192.168.0.1             pass pass       github.com                    pass none       blabla.com                    1
