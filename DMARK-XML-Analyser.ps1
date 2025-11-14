@@ -1,10 +1,10 @@
-Write-Host "#############################################################"-ForegroundColor Gray
-Write-Host "# *                                                        *#"-ForegroundColor Magenta
-Write-Host "# ****************   Hallo, $env:USERNAME :)   *******************#" -ForegroundColor Yellow
-Write-Host "# *                                                        *#"-ForegroundColor Magenta
-Write-Host "# **   DMARK-XML-Analyser Powershell Script von DaUfooo   **#" -ForegroundColor Cyan
-Write-Host "# *                                                        *#"-ForegroundColor Magenta
-Write-Host "#############################################################"-ForegroundColor Gray
+Write-Host "############################################################" -ForegroundColor Gray
+Write-Host "#*                                                        *#" -ForegroundColor Green
+Write-Host "#****************   Hallo, $env:USERNAME :)   *******************#" -ForegroundColor Yellow
+Write-Host "#*                                                        *#" -ForegroundColor Magenta
+Write-Host "#**   DMARK-XML-Analyser Powershell Script von DaUfooo   **#" -ForegroundColor Cyan
+Write-Host "#*                                                        *#" -ForegroundColor Green
+Write-Host "############################################################" -ForegroundColor Gray
 Start-Sleep -Seconds 1
 $directoryPath = ".\XML-Reports\"
 
@@ -47,38 +47,22 @@ foreach ($xmlFile in $xmlFiles) {
         $end = [System.DateTime]::Parse("1970-01-01 00:00:00").AddSeconds($endTimestamp).ToLocalTime()
         $beginFormatted = $begin.ToString('yyyy-MM-dd HH:mm:ss')
         $endFormatted = $end.ToString('yyyy-MM-dd HH:mm:ss')
-
-        Write-Host "Date Range: $beginFormatted to $endFormatted" -ForegroundColor Yellow
-        Write-Host "Organisation: $orgName" -ForegroundColor Magenta
-        Write-Host "Email: $email" -ForegroundColor Gray
-        Write-Host "Source IP: $($record.row.source_ip)" -ForegroundColor Red
-        Write-Host "DKIM: $($record.row.policy_evaluated.dkim)" -ForegroundColor $dkimColor
-        Write-Host "SPF: $($record.row.policy_evaluated.spf)" -ForegroundColor $spfColor
-        Write-Host "DKIM Result: $($record.auth_results.dkim | ForEach-Object { $_.result })" -ForegroundColor $dkimColor
-        Write-Host "SPF Result: $($record.auth_results.spf | ForEach-Object { $_.result })" -ForegroundColor $spfColor
-        Write-Host "Percentage: $pct" -ForegroundColor Gray
-                
+                        
         $tempOutput = @()
 
         foreach ($record in $xml.feedback.record) {
             $currentTime = [System.DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss')
 
-            # Initialisierung von Farben für DKIM und SPF
-            $dkimColor = 'Gray'
-            $spfColor = 'Gray'
-
             foreach ($authResult in $record.auth_results) {
                 foreach ($dkimResult in $authResult.dkim) {
                     $dkimDomain = $dkimResult.domain
                     $dkimResultValue = $dkimResult.result
-                    # Festlegung der Farbe für DKIM basierend auf dem Ergebnis
                     $dkimColor = if ($dkimResultValue -eq 'pass') { 'Green' } elseif ($dkimResultValue -eq 'fail') { 'Red' } else { 'Yellow' }
                 }
 
                 foreach ($spfResult in $authResult.spf) {
                     $spfDomain = $spfResult.domain
                     $spfResultValue = $spfResult.result
-                    # Festlegung der Farbe für SPF basierend auf dem Ergebnis
                     $spfColor = if ($spfResultValue -eq 'pass') { 'Green' } elseif ($spfResultValue -eq 'fail') { 'Red' } else { 'Yellow' }
                 }
             }
@@ -100,28 +84,39 @@ foreach ($xmlFile in $xmlFiles) {
         }
 
         $allOutput += $tempOutput
+
+Write-Host "Date Range: $beginFormatted to $endFormatted" -ForegroundColor Yellow
+Write-Host "Organisation: $orgName" -ForegroundColor Magenta
+Write-Host "Email: $email" -ForegroundColor Gray
+Write-Host "Source IP: $($record.row.source_ip)" -ForegroundColor Red
+Write-Host "DKIM: $($record.row.policy_evaluated.dkim)" -ForegroundColor $dkimColor
+Write-Host "SPF: $($record.row.policy_evaluated.spf)" -ForegroundColor $spfColor
+Write-Host "DKIM Result: $($record.auth_results.dkim | ForEach-Object { $_.result })" -ForegroundColor $dkimColor
+Write-Host "SPF Result: $($record.auth_results.spf | ForEach-Object { $_.result })" -ForegroundColor $spfColor
+Write-Host "Percentage: $pct" -ForegroundColor Gray
+
     } 
     else {
         Write-Host "Fehler: XML konnte nicht geladen werden." -ForegroundColor Red
     }
 }
 
-Write-Host "#############################################################"-ForegroundColor Gray
-Write-Host "# *                                                        *#"-ForegroundColor Magenta
-Write-Host "# **   DMARK-XML-Analyser hat alle XML-Files verabeitet   **#" -ForegroundColor Yellow
-Write-Host "# *                                                        *#"-ForegroundColor Magenta
-Write-Host "#############################################################"-ForegroundColor Gray
-
 Write-Host "`nErgebnisse der Verarbeitung aller Dateien:" -ForegroundColor Cyan
-
+Write-Host "----------------------------------------------------------------------------------------------------------------------------------------------------------" -ForegroundColor White
 $allOutput | Format-Table -Property ReportTime, Organisation, SourceIP, SPF, SPFResult, SPFDomain, DKIM, DKIMResult, DKIMDomain, Count -AutoSize
+Write-Host "----------------------------------------------------------------------------------------------------------------------------------------------------------" -ForegroundColor White
 
 $csvPath = ".\Ergebniss-Auswertung.csv"
 $allOutput | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
 
 
-Write-Host "Es wurden insgesamt $processedFilesCount XML-Dateien verarbeitet." -ForegroundColor Cyan
-Write-Host "Die Ergebnisse wurden erfolgreich in '$csvPath' exportiert." -ForegroundColor Magenta
+Write-Host "##################################################################" -ForegroundColor Gray
+Write-Host "# *                                                             *#" -ForegroundColor Magenta
+Write-Host "# *  DMARK-XML-Analyser hat $processedFilesCount XML-Files verabeitet             *#" -ForegroundColor Cyan
+Write-Host "# *  Die Ergebnisse wurden exportiert.                          *#" -ForegroundColor Yellow
+Write-Host "# *  Ordner des Exports: '$csvPath'           *#" -ForegroundColor Red
+Write-Host "# *                                                             *#" -ForegroundColor Green
+Write-Host "##################################################################" -ForegroundColor Gray
 
 Write-Host "Drücke eine beliebige Taste zum" -ForegroundColor Yellow
 Read-Host "Beenden"
