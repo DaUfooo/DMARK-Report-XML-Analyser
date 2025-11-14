@@ -1,6 +1,6 @@
 Write-Host "##################################################################" -ForegroundColor Cyan
 Start-Sleep -Milliseconds 500
-Write-Host "#     Hallo $env:USERNAME - Virtueller (DaUfooo) wird geladen!   #" -ForegroundColor Yellow
+Write-Host "#     Hallo $env:USERNAME - Virtueller DaUfooo wird geladen!     #" -ForegroundColor Yellow
 Start-Sleep -Milliseconds 500
 Write-Host "##################################################################" -ForegroundColor Cyan
 Start-Sleep -Milliseconds 2000
@@ -116,6 +116,11 @@ Write-Host "`nErgebnisse der Verarbeitung aller Dateien:" -ForegroundColor Cyan
 Start-Sleep -Milliseconds 500
 $allOutput | Format-Table -Property ReportTime, Organisation, SourceIP, SPF, SPFResult, SPFDomain, DKIM, DKIMResult, DKIMDomain, Count -AutoSize
 Start-Sleep -Milliseconds 500
+
+$csvPath = ".\Ergebniss-Auswertung.csv"
+$allOutput | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
+
+Start-Sleep -Milliseconds 500
 Write-Host "#############################################################" -ForegroundColor Yellow
 Start-Sleep -Milliseconds 500
 Write-Host "#   Virtueller DaUfooo ist nun kaputt und legt sich schlafen   #" -ForegroundColor Cyan
@@ -127,5 +132,6 @@ Start-Sleep -Milliseconds 500
 Write-Host "#############################################################" -ForegroundColor Yellow
 Start-Sleep -Milliseconds 500
 Write-Host "Es wurden insgesamt $processedFilesCount XML-Dateien verarbeitet." -ForegroundColor Cyan
+Write-Host "Die Ergebnisse wurden erfolgreich in '$csvPath' exportiert." -ForegroundColor Green
 Start-Sleep -Milliseconds 500
 Read-Host "Drücke eine beliebige Taste zum Beenden"
