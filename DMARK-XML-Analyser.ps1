@@ -1,18 +1,10 @@
-Write-Host "##################################################################" -ForegroundColor Cyan
-Start-Sleep -Milliseconds 500
-Write-Host "#     Hallo $env:USERNAME - Virtueller DaUfooo wird geladen!     #" -ForegroundColor Yellow
-Start-Sleep -Milliseconds 500
-Write-Host "##################################################################" -ForegroundColor Cyan
-Start-Sleep -Milliseconds 2000
-Write-Host "############################################################" -ForegroundColor Red
-Start-Sleep -Milliseconds 500
-Write-Host "#            !Virtueller DaUfooo wurde geladen!               #" -ForegroundColor Green
-Start-Sleep -Milliseconds 500
-Write-Host "#          !Super Fast Reading wird aktiviert!             #" -ForegroundColor Yellow
-Start-Sleep -Milliseconds 500
-Write-Host "# Ahrg,Brtzl,Brtzl,quhf,hmm, rumsprfnns,hmmmm.... fje ARG! #" -ForegroundColor Cyan
-Start-Sleep -Milliseconds 500
-Write-Host "#############################################################" -ForegroundColor Red
+Write-Host "#############################################################"-ForegroundColor Gray
+Write-Host "# *                                                        *#"-ForegroundColor Magenta
+Write-Host "# ****************   Hallo, $env:USERNAME :)   *******************#" -ForegroundColor Yellow
+Write-Host "# *                                                        *#"-ForegroundColor Magenta
+Write-Host "# **   DMARK-XML-Analyser Powershell Script von DaUfooo   **#" -ForegroundColor Cyan
+Write-Host "# *                                                        *#"-ForegroundColor Magenta
+Write-Host "#############################################################"-ForegroundColor Gray
 Start-Sleep -Seconds 1
 $directoryPath = ".\XML-Reports\"
 
@@ -32,7 +24,7 @@ $processedFilesCount = 0
 $allOutput = @()
 
 foreach ($xmlFile in $xmlFiles) {
-    Write-Host "----------------------------------------------------------------------" -ForegroundColor Red
+    Write-Host "----------------------------------------------------------------------" -ForegroundColor White
     Write-Host "`nVerarbeite Datei: $($xmlFile.Name)" -ForegroundColor Cyan
     $processedFilesCount++
 
@@ -57,25 +49,36 @@ foreach ($xmlFile in $xmlFiles) {
         $endFormatted = $end.ToString('yyyy-MM-dd HH:mm:ss')
 
         Write-Host "Date Range: $beginFormatted to $endFormatted" -ForegroundColor Yellow
-        Write-Host "Organisation: $orgName" -ForegroundColor Green
-        Write-Host "Email: $email" -ForegroundColor Green
-        Write-Host "Percentage: $pct" -ForegroundColor Green
-
+        Write-Host "Organisation: $orgName" -ForegroundColor Magenta
+        Write-Host "Email: $email" -ForegroundColor Gray
+        Write-Host "Source IP: $($record.row.source_ip)" -ForegroundColor Red
+        Write-Host "DKIM: $($record.row.policy_evaluated.dkim)" -ForegroundColor $dkimColor
+        Write-Host "SPF: $($record.row.policy_evaluated.spf)" -ForegroundColor $spfColor
+        Write-Host "DKIM Result: $($record.auth_results.dkim | ForEach-Object { $_.result })" -ForegroundColor $dkimColor
+        Write-Host "SPF Result: $($record.auth_results.spf | ForEach-Object { $_.result })" -ForegroundColor $spfColor
+        Write-Host "Percentage: $pct" -ForegroundColor Gray
+                
         $tempOutput = @()
 
         foreach ($record in $xml.feedback.record) {
             $currentTime = [System.DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss')
 
+            # Initialisierung von Farben für DKIM und SPF
+            $dkimColor = 'Gray'
+            $spfColor = 'Gray'
+
             foreach ($authResult in $record.auth_results) {
                 foreach ($dkimResult in $authResult.dkim) {
                     $dkimDomain = $dkimResult.domain
                     $dkimResultValue = $dkimResult.result
+                    # Festlegung der Farbe für DKIM basierend auf dem Ergebnis
                     $dkimColor = if ($dkimResultValue -eq 'pass') { 'Green' } elseif ($dkimResultValue -eq 'fail') { 'Red' } else { 'Yellow' }
                 }
 
                 foreach ($spfResult in $authResult.spf) {
                     $spfDomain = $spfResult.domain
                     $spfResultValue = $spfResult.result
+                    # Festlegung der Farbe für SPF basierend auf dem Ergebnis
                     $spfColor = if ($spfResultValue -eq 'pass') { 'Green' } elseif ($spfResultValue -eq 'fail') { 'Red' } else { 'Yellow' }
                 }
             }
@@ -103,36 +106,22 @@ foreach ($xmlFile in $xmlFiles) {
     }
 }
 
-Write-Host "#############################################################" -ForegroundColor Yellow
-Start-Sleep -Milliseconds 500
-Write-Host "#  !Virtueller DaUfooo hat sich alle XML Files durchgelesen!   #" -ForegroundColor Cyan
-Start-Sleep -Milliseconds 500
-Write-Host "#      Nun male ich Dir ein paar Pixel aufn Screen          #" -ForegroundColor Red
-Start-Sleep -Milliseconds 500
-Write-Host "# Wisch, Wasch, Schwupp da Wupp DKIM und SPF zeig Dich nun! #" -ForegroundColor Green    
-Start-Sleep -Milliseconds 500
-Write-Host "#############################################################" -ForegroundColor Yellow
-Start-Sleep -Milliseconds 500
+Write-Host "#############################################################"-ForegroundColor Gray
+Write-Host "# *                                                        *#"-ForegroundColor Magenta
+Write-Host "# **   DMARK-XML-Analyser hat alle XML-Files verabeitet   **#" -ForegroundColor Yellow
+Write-Host "# *                                                        *#"-ForegroundColor Magenta
+Write-Host "#############################################################"-ForegroundColor Gray
+
 Write-Host "`nErgebnisse der Verarbeitung aller Dateien:" -ForegroundColor Cyan
-Start-Sleep -Milliseconds 500
+
 $allOutput | Format-Table -Property ReportTime, Organisation, SourceIP, SPF, SPFResult, SPFDomain, DKIM, DKIMResult, DKIMDomain, Count -AutoSize
-Start-Sleep -Milliseconds 500
 
 $csvPath = ".\Ergebniss-Auswertung.csv"
 $allOutput | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
 
-Start-Sleep -Milliseconds 500
-Write-Host "#############################################################" -ForegroundColor Yellow
-Start-Sleep -Milliseconds 500
-Write-Host "#   Virtueller DaUfooo ist nun kaputt und legt sich schlafen   #" -ForegroundColor Cyan
-Start-Sleep -Milliseconds 500
-Write-Host "#     Aiiiiiijjjjaaaaaaa!! Der Process wurde gekillt!       #" -ForegroundColor Red
-Start-Sleep -Milliseconds 500
-Write-Host "#   Virtueller DaUfooo ist nun eingeschlafen - Bitte Flüstern  #" -ForegroundColor Green
-Start-Sleep -Milliseconds 500
-Write-Host "#############################################################" -ForegroundColor Yellow
-Start-Sleep -Milliseconds 500
+
 Write-Host "Es wurden insgesamt $processedFilesCount XML-Dateien verarbeitet." -ForegroundColor Cyan
-Write-Host "Die Ergebnisse wurden erfolgreich in '$csvPath' exportiert." -ForegroundColor Green
-Start-Sleep -Milliseconds 500
-Read-Host "Drücke eine beliebige Taste zum Beenden"
+Write-Host "Die Ergebnisse wurden erfolgreich in '$csvPath' exportiert." -ForegroundColor Magenta
+
+Write-Host "Drücke eine beliebige Taste zum" -ForegroundColor Yellow
+Read-Host "Beenden"
