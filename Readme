@@ -27,12 +27,15 @@ Count (Anzahl der E-Mails)
 Nach der Verarbeitung aller Dateien wird eine Tabelle mit den zusammengefassten Ergebnissen für alle XML-Dateien angezeigt:
 Die Tabelle listet die extrahierten und verarbeiteten Daten auf, damit der Benutzer die Authentifizierungsergebnisse für die jeweiligen Domains und Absender-IP-Adressen überprüfen kann.
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Verarbeite Datei: yahoo.com!blabla.gv.at!1354454365!1453534535599.xml
 Date Range: 2025-11-11 01:00:00 to 2025-11-12 00:59:59
 Organisation: Yahoo
 Email: dmarchelp@yahooinc.com
 Percentage: 100
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ReportTime          Organisation                 SourceIP                SPF  SPFResult  SPFDomain                     DKIM DKIMResult DKIMDomain                    Count
+----------          ------------                 --------                ---  ---------  ---------                     ---- ---------- ----------                    -----
 2025-11-14 14:32:00 Outlook.com                  209.85.128.185          fail pass       googlegroups.com              fail pass       googlegroups.com              1
 2025-11-14 14:32:00 Outlook.com                  74.125.224.60           fail pass       googlegroups.com              fail pass       googlegroups.com              1
 2025-11-14 14:32:00 Outlook.com                  123.44.122.122          pass pass       github.com                    pass pass       blabla.com                    3
