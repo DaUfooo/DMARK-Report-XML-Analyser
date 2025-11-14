@@ -102,9 +102,9 @@ Write-Host "Percentage: $pct" -ForegroundColor Gray
 }
 
 Write-Host "`nErgebnisse der Verarbeitung aller Dateien:" -ForegroundColor Cyan
-Write-Host "----------------------------------------------------------------------------------------------------------------------------------------------------------" -ForegroundColor White
+Write-Host "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------" -ForegroundColor White
 $allOutput | Format-Table -Property ReportTime, Organisation, SourceIP, SPF, SPFResult, SPFDomain, DKIM, DKIMResult, DKIMDomain, Count -AutoSize
-Write-Host "----------------------------------------------------------------------------------------------------------------------------------------------------------" -ForegroundColor White
+Write-Host "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------" -ForegroundColor White
 
 $csvPath = ".\Ergebniss-Auswertung.csv"
 $allOutput | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
