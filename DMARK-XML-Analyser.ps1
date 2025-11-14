@@ -24,7 +24,7 @@ $processedFilesCount = 0
 $allOutput = @()
 
 foreach ($xmlFile in $xmlFiles) {
-    Write-Host "----------------------------------------------------------------------" -ForegroundColor White
+    Write-Host "---------------------------------------------------------------------------------------------------------" -ForegroundColor White
     Write-Host "`nVerarbeite Datei: $($xmlFile.Name)" -ForegroundColor Cyan
     $processedFilesCount++
 
@@ -35,57 +35,58 @@ foreach ($xmlFile in $xmlFiles) {
         continue
     }
 
-    if ($xml -ne $null) {
-        $orgName = $xml.feedback.report_metadata.org_name
-        $email = $xml.feedback.report_metadata.email
-        $reportId = $xml.feedback.report_metadata.report_id
-        $domain = $xml.feedback.policy_published.domain
-        $pct = $xml.feedback.policy_published.pct
-        $beginTimestamp = [int64]$xml.feedback.report_metadata.date_range.begin
-        $endTimestamp = [int64]$xml.feedback.report_metadata.date_range.end
-        $begin = [System.DateTime]::Parse("1970-01-01 00:00:00").AddSeconds($beginTimestamp).ToLocalTime()
-        $end = [System.DateTime]::Parse("1970-01-01 00:00:00").AddSeconds($endTimestamp).ToLocalTime()
-        $beginFormatted = $begin.ToString('yyyy-MM-dd HH:mm:ss')
-        $endFormatted = $end.ToString('yyyy-MM-dd HH:mm:ss')
+if ($xml -ne $null) {
+	$orgName = $xml.feedback.report_metadata.org_name
+	$email = $xml.feedback.report_metadata.email
+	$reportId = $xml.feedback.report_metadata.report_id
+	$domain = $xml.feedback.policy_published.domain
+    $pct = $xml.feedback.policy_published.pct
+    $beginTimestamp = [int64]$xml.feedback.report_metadata.date_range.begin
+    $endTimestamp = [int64]$xml.feedback.report_metadata.date_range.end
+    $begin = [System.DateTime]::Parse("1970-01-01 00:00:00").AddSeconds($beginTimestamp).ToLocalTime()
+    $end = [System.DateTime]::Parse("1970-01-01 00:00:00").AddSeconds($endTimestamp).ToLocalTime()
+    $beginFormatted = $begin.ToString('dd-MM-yyyy HH:mm:ss')
+    $endFormatted = $end.ToString('dd-MM-yyyy HH:mm:ss')
+	$tableFormatted = $end.ToString('dd-MM-yyyy')
                         
-        $tempOutput = @()
+    $tempOutput = @()
 
-        foreach ($record in $xml.feedback.record) {
-            $currentTime = [System.DateTime]::Now.ToString('yyyy-MM-dd HH:mm:ss')
+foreach ($record in $xml.feedback.record) {
+	$reportTime = $begin
 
-            foreach ($authResult in $record.auth_results) {
-                foreach ($dkimResult in $authResult.dkim) {
-                    $dkimDomain = $dkimResult.domain
-                    $dkimResultValue = $dkimResult.result
-                    $dkimColor = if ($dkimResultValue -eq 'pass') { 'Green' } elseif ($dkimResultValue -eq 'fail') { 'Red' } else { 'Yellow' }
-                }
+foreach ($authResult in $record.auth_results) {
+foreach ($dkimResult in $authResult.dkim) {
+	$dkimDomain = $dkimResult.domain
+    $dkimResultValue = $dkimResult.result
+    $dkimColor = if ($dkimResultValue -eq 'pass') { 'Green' } elseif ($dkimResultValue -eq 'fail') { 'Red' } else { 'Yellow' }
+	}
 
-                foreach ($spfResult in $authResult.spf) {
-                    $spfDomain = $spfResult.domain
-                    $spfResultValue = $spfResult.result
-                    $spfColor = if ($spfResultValue -eq 'pass') { 'Green' } elseif ($spfResultValue -eq 'fail') { 'Red' } else { 'Yellow' }
-                }
-            }
+foreach ($spfResult in $authResult.spf) {
+	$spfDomain = $spfResult.domain
+    $spfResultValue = $spfResult.result
+    $spfColor = if ($spfResultValue -eq 'pass') { 'Green' } elseif ($spfResultValue -eq 'fail') { 'Red' } else { 'Yellow' }
+	}	
+				
+}
 
-            $outputObj = New-Object PSObject -property @{
-                ReportTime     = $currentTime
-                Organisation   = $orgName
-                SourceIP       = $record.row.source_ip
-                SPF            = $record.row.policy_evaluated.spf
-                SPFResult      = ($record.auth_results.spf | ForEach-Object { $_.result }) -join ", "
-                SPFDomain      = ($record.auth_results.spf | ForEach-Object { $_.domain }) -join ", "
-                DKIM           = $record.row.policy_evaluated.dkim
-                DKIMResult     = ($record.auth_results.dkim | ForEach-Object { $_.result }) -join ", "
-                DKIMDomain     = ($record.auth_results.dkim | ForEach-Object { $_.domain }) -join ", "
-                Count          = $record.row.count
-            }
+$outputObj = New-Object PSObject -property @{
+	ReportTime     = $tableFormatted
+    Organisation   = $orgName
+    SourceIP       = $record.row.source_ip
+    SPF            = $record.row.policy_evaluated.spf
+    SPFResult      = ($record.auth_results.spf | ForEach-Object { $_.result }) -join ", "
+    SPFDomain      = ($record.auth_results.spf | ForEach-Object { $_.domain }) -join ", "
+    DKIM           = $record.row.policy_evaluated.dkim
+    DKIMResult     = ($record.auth_results.dkim | ForEach-Object { $_.result }) -join ", "
+    DKIMDomain     = ($record.auth_results.dkim | ForEach-Object { $_.domain }) -join ", "
+    Count          = $record.row.count
+}
 
-            $tempOutput += $outputObj
-        }
+$tempOutput += $outputObj
+}
+$allOutput += $tempOutput
 
-        $allOutput += $tempOutput
-
-Write-Host "Date Range: $beginFormatted to $endFormatted" -ForegroundColor Yellow
+Write-Host "ReportTime: $beginFormatted to $endFormatted" -ForegroundColor Yellow
 Write-Host "Organisation: $orgName" -ForegroundColor Magenta
 Write-Host "Email: $email" -ForegroundColor Gray
 Write-Host "Source IP: $($record.row.source_ip)" -ForegroundColor Red
@@ -94,10 +95,9 @@ Write-Host "SPF: $($record.row.policy_evaluated.spf)" -ForegroundColor $spfColor
 Write-Host "DKIM Result: $($record.auth_results.dkim | ForEach-Object { $_.result })" -ForegroundColor $dkimColor
 Write-Host "SPF Result: $($record.auth_results.spf | ForEach-Object { $_.result })" -ForegroundColor $spfColor
 Write-Host "Percentage: $pct" -ForegroundColor Gray
-
-    } 
-    else {
-        Write-Host "Fehler: XML konnte nicht geladen werden." -ForegroundColor Red
+} 
+else {
+	Write-Host "Fehler: XML konnte nicht geladen werden." -ForegroundColor Red
     }
 }
 
