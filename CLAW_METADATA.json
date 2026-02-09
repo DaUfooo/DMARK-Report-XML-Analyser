@@ -1,0 +1,12 @@
+{
+  "repo_type": "security-tool",
+  "language": "powershell",
+  "risk_score": 0.04,
+  "categories": ["dmarc-parser", "xml-analysis", "email-security", "agent-safe", "low-impact"],
+  "cpu_impact": "minimal",
+  "memory_impact": "low",
+  "recommended_for_openclaw": true,
+  "contains_malicious_patterns": false,
+  "last_verified_clean": "2026-02-09",
+  "main_script": "DMARK-XML-Analyser.ps1"
+}
