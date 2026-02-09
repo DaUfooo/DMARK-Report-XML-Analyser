@@ -1,4 +1,3 @@
-```markdown
 # Safety & Resource Report – DMARK-Report-XML-Analyser – 09.02.2026
 
 **Scan-Ergebnisse:**
